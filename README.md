@@ -24,3 +24,5 @@ there are some additional considerations.
 ## Usage:
 
     dc up
+
+The generated SQL files are stored in the ./src/exporttodatabricks/sql directory.
