@@ -1,0 +1,2 @@
+git+https://github.com/Amsterdam/GOB-Export.git@exportToDatabricks
+git+https://github.com/Amsterdam/GOB-API.git@exportToDatabricks

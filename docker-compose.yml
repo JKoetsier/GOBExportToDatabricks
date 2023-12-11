@@ -1,0 +1,10 @@
+version: "3.8"
+
+services:
+  exporttodatabricks:
+    build: src
+    volumes:
+      - ./src/exporttodatabricks:/app/exporttodatabricks
+      - ../gob/GOB-Core/gobcore:/usr/local/lib/python3.9/site-packages/gobcore
+      - ../gob/GOB-Export/src/gobexport:/usr/local/lib/python3.9/site-packages/gobexport
+      - ../gob/GOB-API/src/gobapi:/usr/local/lib/python3.9/site-packages/gobapi
