@@ -14,18 +14,12 @@ SQL_PATH.mkdir(parents=True, exist_ok=True)
 
 def generate_databricks_queries():
 
-    catcolprod = None
-
     for catalog, catalog_config in CONFIG_MAPPING.items():
         if catalog == "test_catalogue" or catalog == "brk":  # BRK is old and won't be migrated
             continue
 
         for collection, config in catalog_config.items():
             for product, product_config in config.products.items():
-
-                if catcolprod and (catalog, collection, product) != catcolprod:
-                    print("Skipping", catalog, collection, product)
-                    continue
 
                 if product_config.get('api_type') in ('graphql', 'graphql_streaming'):
                     format = product_config.get('format')

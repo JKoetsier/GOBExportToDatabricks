@@ -34,10 +34,10 @@ class DatabricksSqlGenerator(SqlGenerator):
                                                             dst_collection_name: str, join_alias: str, relation_attr_name: str):
 
         for attribute in attributes:
-            self.select_expressions[f"{to_snake(join_alias)}.{to_snake(attribute)}"] = f"{to_snake(relation_attr_name)}_{to_snake(attribute)}"
+            self._add_select_expression(f"{to_snake(join_alias)}.{to_snake(attribute)}", f"{to_snake(relation_attr_name)}_{to_snake(attribute)}")
 
-        self.select_expressions[f"'{dst_catalog_name}'"] = f"{to_snake(relation_attr_name)}_catalog"
-        self.select_expressions[f"'{dst_collection_name}'"] = f"{to_snake(relation_attr_name)}_collection"
+        self._add_select_expression(f"'{dst_catalog_name}'", f"{to_snake(relation_attr_name)}_catalog")
+        self._add_select_expression(f"'{dst_collection_name}'", f"{to_snake(relation_attr_name)}_collection")
 
     def _current_filter_expression(self, table_id: str = None):
         table = f"{table_id}." if table_id else ""
@@ -143,10 +143,13 @@ class DatabricksSqlGenerator(SqlGenerator):
             return f"'TODO: DO THIS MANUALLY ({alias_or_identifier})'"
 
         search_for = to_snake(alias_or_identifier.replace('.', '_'))
-        for select, alias in self.select_expressions.items():
-            if alias is not None and alias == search_for:
+
+        for alias, select in self.aliased_select_expressions.items():
+            if alias == search_for:
                 return select
-            elif alias is None and select.split('.')[-1] == search_for:
+
+        for select in self.unaliased_select_expressions:
+            if select.split('.')[-1] == search_for:
                 return select
 
     def _build_get_json_object(self, column_expression: str, json_path: str):
