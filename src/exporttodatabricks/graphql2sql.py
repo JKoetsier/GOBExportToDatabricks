@@ -9,10 +9,11 @@ from gobcore.model import GOBModel
 class DatabricksSqlGenerator(SqlGenerator):
     SCHEMA = "dpbk_dev.02_silver"
 
-    def __init__(self, visitor: 'GraphQLVisitor', format: dict):
+    def __init__(self, visitor: 'GraphQLVisitor', format: dict, is_shape=False):
         super().__init__(visitor)
 
         self.format = format
+        self.is_shape = is_shape
         self.relation_table_renames = {}  # map of legacy name -> databricks name
 
         for relation_name in get_relations(GOBModel(True))['collections'].keys():
@@ -180,8 +181,7 @@ class DatabricksSqlGenerator(SqlGenerator):
 
             new_select_expressions[export_attr] = expression if expression else "NULL"
 
-        if not any([k in new_select_expressions.keys() for k in ('geometrie', 'GEOMETRIE')]):
-            # Always add geometrie if available, as it's expected to be there for shape exports even when not in format
+        if self.is_shape and 'geometrie' not in new_select_expressions.keys():
             geometrie = self._evaluate_format_expression('geometrie')
 
             if geometrie:
