@@ -180,6 +180,14 @@ class DatabricksSqlGenerator(SqlGenerator):
 
             new_select_expressions[export_attr] = expression if expression else "NULL"
 
+        if not any([k in new_select_expressions.keys() for k in ('geometrie', 'GEOMETRIE')]):
+            # Always add geometrie if available, as it's expected to be there for shape exports even when not in format
+            geometrie = self._evaluate_format_expression('geometrie')
+
+            if geometrie:
+                new_select_expressions['geometrie'] = geometrie
+
+
         # Check
         missing = False
         for export_attr in self.format.keys():

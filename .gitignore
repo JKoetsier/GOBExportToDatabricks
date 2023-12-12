@@ -161,3 +161,4 @@ cython_debug/
 =======
 
 src/exporttodatabricks/sql
+src/exporttodatabricks/notebooks

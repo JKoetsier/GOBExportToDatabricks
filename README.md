@@ -26,3 +26,4 @@ there are some additional considerations.
     dc up
 
 The generated SQL files are stored in the ./src/exporttodatabricks/sql directory.
+Also, a notebook is generated per catalog with the queries in ./src/exporttodatabricks/notebooks.
